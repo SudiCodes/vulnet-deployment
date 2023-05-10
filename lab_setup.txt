@@ -66,7 +66,7 @@ services.sh
 
 
 #Deploy zap with gui
-sudo docker run -u zap --network vuln-net --ip="10.0.0.4" --name zap -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -i owasp/zap2docker-stable zap.sh -g
+sudo docker run -u zap --network vuln-net --ip="10.0.0.4" --name zap -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -i owasp/zap2docker-stable zap.sh
 
 
 
