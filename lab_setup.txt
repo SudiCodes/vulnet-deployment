@@ -1,0 +1,73 @@
+HOST OS Information:
+
+PRETTY_NAME="Ubuntu 22.04.2 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.2 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+________________________________________________________________________________________
+
+
+docker installation:
+
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sudo sh get-docker.sh
+
+
+#create a network 
+sudo docker network create vuln-net --attachable --subnet 10.0.0.0/24
+
+
+
+
+#install metasploitable
+sudo docker run \
+    -it \
+    --network vuln-net \
+    --ip="10.0.0.3" \
+    --name metasploitable \
+    --hostname metasploitable2 \
+    tleemcjr/metasploitable2 \
+    bash
+
+
+
+
+
+#initiate services
+services.sh
+!!! Don't exit the terminal. This will kill the services, in turn the container
+!!! Open another terminal for futher steps 
+
+    Incase you stopped it:
+        - docker ps -a
+            v2@v2-Lenovo-ideapad-330S-14IKB:~$ docker ps -a
+            CONTAINER ID   IMAGE                      COMMAND   CREATED          STATUS                     PORTS     NAMES
+            69ce81c784e2   tleemcjr/metasploitable2   "bash"    14 minutes ago   Exited (0) 5 minutes ago             metasploitable
+        - docker start 69ce81c784e2
+        - docker run -it 69ce81c784e2 bash 
+
+
+
+
+#check if metasploitable is running 
+> open browser
+> go to: http://10.0.0.3/
+> You will be able to see the page 
+
+
+
+
+#Deploy zap with gui
+sudo docker run -u zap --network vuln-net --ip="10.0.0.4" --name zap -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -i owasp/zap2docker-stable zap.sh -g
+
+
+
+
