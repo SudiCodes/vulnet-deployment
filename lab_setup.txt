@@ -68,6 +68,7 @@ services.sh
 #Deploy zap with gui
 sudo docker run -u zap --network vuln-net --ip="10.0.0.4" --name zap -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -i owasp/zap2docker-stable zap.sh
 
-
+#Deploy Datadog agnet for monitoring
+docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e DD_API_KEY=<API_KEY> -e DD_SITE="datadoghq.com" --network vuln-net --ip="10.0.0.10" gcr.io/datadoghq/agent:7
 
 
