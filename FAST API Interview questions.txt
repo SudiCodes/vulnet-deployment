@@ -1,0 +1,134 @@
+Core Fundamentals (1–10)
+
+How does FastAPI's type system differ from Flask's, and what are the runtime implications?
+What is Starlette and how much of FastAPI is actually Starlette under the hood?
+Explain the ASGI vs WSGI distinction and why it matters for FastAPI's concurrency model.
+What happens internally when FastAPI resolves a path parameter with a Pydantic type annotation?
+How does FastAPI's OpenAPI schema get generated — at import time or request time?
+What is the difference between response_model and the function's return type annotation?
+How does FastAPI handle request body parsing under the hood (where does python-multipart fit in)?
+When would you NOT use FastAPI? What are its real weaknesses?
+What is anyio and why does FastAPI depend on it?
+Explain the startup sequence of a FastAPI application from uvicorn main:app to the first request.
+
+
+Routing & Request Handling (11–25)
+
+How do you handle path parameter conflicts — e.g., /users/me vs /users/{id}?
+What is the difference between APIRouter prefix and path-level prefix? Where does middleware apply?
+How do query parameters with the same name (multi-value) get parsed in FastAPI?
+Explain Depends() resolution order when multiple dependencies inject the same resource.
+What is a sub-application in FastAPI and how does it differ from mounting a router?
+How do you conditionally include a router based on environment/feature flags?
+What happens when a path operation returns None? How do you handle optional responses correctly?
+How does FastAPI distinguish between a request body and a query param when both share the same name?
+What is BackgroundTasks and what are its limitations vs Celery/ARQ?
+How would you implement versioned APIs — URL prefix vs header-based versioning tradeoffs?
+Explain the status_code parameter behavior when response_model excludes fields.
+What is the difference between Response and JSONResponse in a return statement?
+How do you stream large responses in FastAPI?
+What is StreamingResponse and when would you prefer it over FileResponse?
+How do you handle file uploads larger than available memory?
+
+
+Dependency Injection (26–38)
+
+What are the three scopes of a dependency and how do you control reuse within a request?
+How do you implement a singleton dependency (e.g., DB connection pool) that lives for the app lifetime?
+What is the difference between yield-based dependencies and __enter__/__exit__ context managers?
+How do you test a FastAPI route that has deeply nested dependencies without mocking everything?
+Can dependencies have dependencies? What is the resolution graph and can it have cycles?
+How do you pass runtime values (e.g., from request headers) into a class-based dependency?
+What happens when a yield dependency raises an exception after the yield?
+How would you implement rate limiting as a dependency?
+Explain the difference between Security() and Depends() — when does it matter?
+How do dependencies interact with middleware? Which runs first?
+How do you implement dependency overrides in tests without affecting production?
+What are the performance implications of deeply nested dependency graphs?
+How do you share state between dependencies within a single request lifecycle?
+
+
+Pydantic & Validation (39–50)
+
+What is the difference between Pydantic v1 and v2 behavior in FastAPI — which version does current FastAPI default to?
+How do you validate fields that depend on each other (cross-field validation)?
+What is model_validator vs field_validator in Pydantic v2?
+How do you handle partial updates (PATCH) where all fields are optional without duplicating models?
+What is response_model_exclude_unset and when would you use it?
+How do you serialize a Pydantic model with custom types (e.g., datetime, UUID, Decimal)?
+What is model_config in Pydantic v2 and what replaced class Config?
+How do you handle recursive/self-referential models?
+Explain TypeAdapter in Pydantic v2 and a use case for it.
+What are discriminated unions and when are they useful in API design?
+How does FastAPI handle validation errors — what is the default error response shape?
+How would you customize the 422 validation error response format globally?
+
+
+Authentication & Security (51–60)
+
+How does OAuth2PasswordBearer actually work — what does it validate and what doesn't it?
+Implement JWT token refresh logic — where do you store refresh tokens and why does it matter?
+How do you implement role-based access control (RBAC) using FastAPI's dependency system?
+What is PKCE and when is it relevant to a FastAPI OAuth2 implementation?
+How do you prevent timing attacks in token comparison?
+What is the difference between HTTPBasic and APIKeyHeader security schemes in FastAPI?
+How do you handle CORS properly — what are the actual security risks of misconfigured CORS?
+How do you implement API key scoping (per-key rate limits, permissions)?
+What headers should you set for security hardening and how do you set them globally in FastAPI?
+How do you handle authentication in WebSocket connections?
+
+
+Async, Concurrency & Performance (61–73)
+
+When does using async def actually hurt performance in FastAPI?
+What happens when you call a blocking function inside an async def route — what's the correct fix?
+How do you run CPU-bound tasks without blocking the event loop?
+What is the difference between asyncio.gather and asyncio.TaskGroup?
+How many workers should you run for a FastAPI app — what factors determine this?
+What is connection pool exhaustion and how do you detect and fix it in a FastAPI + SQLAlchemy app?
+How do you implement request timeouts in FastAPI?
+What is backpressure and how do you handle it in a streaming FastAPI endpoint?
+How do you profile async FastAPI code — what tools work and which don't?
+What are the tradeoffs of uvicorn vs gunicorn + uvicorn workers in production?
+Explain the GIL's impact (or lack thereof) on async FastAPI — under what conditions does it still matter?
+How do you implement circuit breakers for downstream service calls in FastAPI?
+What is httpx.AsyncClient and why is requests problematic in async routes?
+
+
+Middleware & Lifecycle (74–82)
+
+What is the execution order of middleware, dependencies, and route handlers?
+How do you implement request ID tracing across logs in middleware?
+What is the difference between Starlette middleware and FastAPI's add_middleware?
+How do you implement a middleware that short-circuits the request (e.g., IP blocklist)?
+What are lifespan events and how do they replace the deprecated on_event startup/shutdown?
+How do you share resources initialized in lifespan with route handlers?
+How do you implement global exception handlers and what are their limitations?
+What is the difference between HTTPException and a custom exception handler?
+How do you handle exceptions that occur inside background tasks?
+
+
+Testing (83–90)
+
+What is TestClient based on and what are its async limitations?
+How do you test WebSocket endpoints?
+How do you test streaming responses?
+What is AsyncClient from httpx and when do you need it over TestClient?
+How do you test lifespan events (startup/shutdown) in pytest?
+How do you isolate database state between tests in a FastAPI + SQLAlchemy setup?
+How do you test middleware in isolation?
+What are the tradeoffs of integration tests vs unit tests for FastAPI dependency-heavy routes?
+
+
+Production & Architecture (91–100)
+
+How do you implement health check endpoints — what should liveness vs readiness checks actually verify?
+How do you manage database migrations in a FastAPI app deployed on Kubernetes with rolling updates?
+What is the N+1 query problem and how do you detect it in a FastAPI + ORM setup?
+How do you implement distributed tracing (OpenTelemetry) in FastAPI?
+How do you handle secrets management — what's wrong with .env files in production?
+What are the tradeoffs of putting business logic in Pydantic validators vs service layers?
+How do you implement idempotent POST endpoints?
+How do you handle schema evolution in a live API without breaking existing clients?
+What does a proper FastAPI project structure look like at scale — what goes wrong with flat structures?
+How would you migrate a large Flask monolith to FastAPI incrementally without a full rewrite?
